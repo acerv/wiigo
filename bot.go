@@ -6,9 +6,9 @@ package main
 
 import (
 	"log"
+	"os"
 	"time"
 
-	"gopkg.in/ini.v1"
 	"gopkg.in/tucnak/telebot.v2"
 )
 
@@ -54,34 +54,15 @@ func (obj *WiiBot) SendSubredditImage(msg *telebot.Message, gallery string) {
 
 // Create a new bot.
 func NewBot() *WiiBot {
-	cfg, err := ini.Load("config.ini")
-	if err != nil {
-		log.Fatal(err)
+	token := os.Getenv("TOKEN")
+	if token == "" {
+		log.Fatal("TOKEN env is not available")
 	}
 
-	// read telegram section from config file
-	telegram_section, err := cfg.GetSection("telegram")
-	if err != nil {
-		log.Fatal(err)
+	imgur_client_id := os.Getenv("IMGUR_CLIENT_ID")
+	if imgur_client_id == "" {
+		log.Fatal("IMGUR_CLIENT_ID env is not available")
 	}
-
-	// read imgur section from config file
-	imgur_section, err := cfg.GetSection("imgur")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if !telegram_section.HasKey("token") {
-		log.Fatal("telegram token is not defined")
-	}
-
-	if !imgur_section.HasKey("client_id") {
-		log.Fatal("imgur client_id is not defined")
-	}
-
-	// create telegram bot
-	token := telegram_section.Key("token").String()
-	imgur_client_id := imgur_section.Key("client_id").String()
 
 	bot, err := telebot.NewBot(telebot.Settings{
 		Token:  token,
