@@ -64,10 +64,29 @@ func NewBot() *WiiBot {
 		log.Fatal("IMGUR_CLIENT_ID env is not available")
 	}
 
-	bot, err := telebot.NewBot(telebot.Settings{
-		Token:  token,
-		Poller: &telebot.LongPoller{Timeout: 10 * time.Second},
-	})
+	public_url := os.Getenv("PUBLIC_URL")
+
+	var bot *telebot.Bot
+	var err error
+
+	if public_url != "" {
+		// deploy with webhooks
+		port := os.Getenv("PORT")
+		bot, err = telebot.NewBot(telebot.Settings{
+			Token: token,
+			Poller: &telebot.Webhook{
+				Listen:   ":" + port,
+				Endpoint: &telebot.WebhookEndpoint{PublicURL: public_url},
+			},
+		})
+	} else {
+		// initialize a normal polling
+		bot, err = telebot.NewBot(telebot.Settings{
+			Token:  token,
+			Poller: &telebot.LongPoller{Timeout: 10 * time.Second},
+		})
+	}
+
 	if err != nil {
 		log.Fatal(err)
 	}
