@@ -1,4 +1,4 @@
-# wiigo
+# Introduction
 
 Telegram bot written in Go for Warsow.ita.
 
@@ -6,13 +6,11 @@ Telegram bot written in Go for Warsow.ita.
 
 To build the bot:
 
-    go build -o wii *.go
+    go build -o wiibot .
 
 # Configure
-To configure the bot, create a file called `config.ini` inside the binary folder.
+To configure the bot, set the following environment variables:
 
-    [telegram]
-    token = <your bot token>
-
-    [imgur]
-    client_id = <imgur client id>
+* TOKEN: Telegram bot token
+* IMGUR_CLIENT_ID: imgur client ID
+* PUBLIC_URL: optional if running on local PC
